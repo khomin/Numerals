@@ -1,0 +1,34 @@
+<resources>
+    <string name="app_name">Numerals</string>
+    <string name="date">2020</string>
+    <string name="version">0.1</string>
+    <string name="about_licenses">Licenses</string>
+    <string name="app_version">0.01</string>
+    <string name="na">NA</string>
+    <string name="total_time">Total time</string>
+    <string name="start">Start</string>
+    <string name="correct_answer">Correct answer</string>
+    <string name="incorrect_answers">Incorrect answers</string>
+    <string name="best_result">Best result</string>
+    <string name="slow_mode">Slow</string>
+    <string name="medium_mode">Medium</string>
+    <string name="fast_mode">Fast</string>
+    <string name="_1">1</string>
+    <string name="_2">2</string>
+    <string name="_3">3</string>
+    <string name="_6">6</string>
+    <string name="_5">5</string>
+    <string name="_4">4</string>
+    <string name="_7">7</string>
+    <string name="_8">8</string>
+    <string name="_9">9</string>
+    <string name="Cancel">cancel</string>
+    <string name="remove"><![CDATA[<-]]></string>
+    <string name="_0">0</string>
+    <string name="repeat">Repeat</string>
+    <string name="exercise">Exercise</string>
+    <string name="sourse">github</string>
+    <string name="main">Main screen</string>
+    <string name="about">About</string>
+
+</resources>

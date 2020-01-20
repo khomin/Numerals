@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="single"
+        android:id="@+id/menu_main">
+        <item
+            android:id="@+id/exercise"
+            android:icon="@drawable/ic_home_black_24dp"
+            android:title="@string/exercise"/>
+        <item
+            android:id="@+id/about"
+            android:icon="@drawable/ic_person_black_96dp"
+            android:title="@string/about"/>
+    </group>
+    <group android:id="@+id/menu_other">
+        <item
+            android:id="@+id/sourse"
+            android:icon="@drawable/ic_github"
+            android:title="@string/sourse"/>
+    </group>
+</menu>
+

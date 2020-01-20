@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/mainScreenFragment">
+
+    <fragment
+        android:id="@+id/mainScreenFragment"
+        android:name="com.example.nummerals.MainScreenFragment"
+        tools:layout="@layout/fragment_main_screen"
+        android:label="MainScreenFragment">
+        <action
+            android:id="@+id/action_mainScreenFragment_to_selectLevelFragment"
+            app:destination="@id/selectLevelFragment" />
+        <action
+            android:id="@+id/action_mainScreenFragment_to_aboutFragment"
+            app:destination="@id/aboutFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/exerciseFragment"
+        android:name="com.example.nummerals.ExerciseFragment"
+        android:label="ExerciseFragment"
+        tools:layout="@layout/fragment_exercise"/>
+    <fragment
+        android:id="@+id/aboutFragment"
+        android:name="AboutFragment"
+        android:label="AboutFragment"
+        tools:layout="@layout/fragment_about">
+        <action
+            android:id="@+id/action_aboutFragment_to_aboutFragmentLicenses"
+            app:destination="@id/aboutFragmentLicenses" />
+    </fragment>
+    <fragment
+        android:id="@+id/selectLevelFragment"
+        android:name="com.example.nummerals.SelectLevelFragment"
+        android:label="SelectLevelFragment"
+        tools:layout="@layout/fragment_select_level_exercise">
+        <action
+            android:id="@+id/action_selectLevelFragment_to_exerciseFragment"
+            app:destination="@id/exerciseFragment" />
+    </fragment>
+    <activity
+        android:id="@+id/mainActivity"
+        android:name="com.example.nummerals.MainActivity"
+        android:label="MainActivity" />
+    <fragment
+        android:id="@+id/aboutFragmentLicenses"
+        android:name="AboutFragmentLicenses"
+        android:label="AboutFragmentLicenses" />
+</navigation>
