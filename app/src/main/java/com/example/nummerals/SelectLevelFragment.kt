@@ -27,6 +27,7 @@ class SelectLevelFragment : Fragment() {
 
         mBinding.mediumMode?.setOnClickListener {
             view?.let {
+                mBinding.model?.typeLevelExercise?.postValue(LevelExerciseType.MEDIUM)
                 Navigation.findNavController(it).navigate(R.id.action_selectLevelFragment_to_exerciseFragment)
             }
         }
