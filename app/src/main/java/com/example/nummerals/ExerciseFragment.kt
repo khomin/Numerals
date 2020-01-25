@@ -65,7 +65,7 @@ class ExerciseFragment : Fragment() {
         mBinding.model?.progressExercise?.postValue(0)
         mBinding.model?.progressExerciseTotal?.postValue(100)
 
-        // TODO: ring 5 second
+        // TODO: add ring 5 second
 
         return mBinding.root
     }
@@ -138,9 +138,7 @@ class ExerciseFragment : Fragment() {
 //            listNumerResourses.add(getResources().getIdentifier("numeral_" + ((nextValue%10)).toString(),"raw", activity?.getPackageName()))
         }
 
-        audioPlayer.addValueToPlay(context, listNumerResourses) {
-
-        }
+        audioPlayer.addValueToPlay(context, listNumerResourses) {}
     }
 
     private fun resetTimerResidue() {
@@ -163,7 +161,11 @@ class ExerciseFragment : Fragment() {
                         mBinding.model?.exerciseInProcess?.postValue(true)
                         mBinding.model?.progressTimerResidue?.postValue(it - 1)
                     } else {
-                        errorResult()
+                        mBinding.model?.exerciseInProcess?.value?.let {
+                            if(!it) {
+                                errorResult()
+                            }
+                        }
                     }
                 }
                 delay(1000)
