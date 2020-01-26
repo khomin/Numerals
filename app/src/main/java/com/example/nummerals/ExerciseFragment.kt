@@ -2,9 +2,12 @@ package com.example.nummerals
 
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.ProgressBar
 import androidx.annotation.RequiresApi
 import androidx.databinding.BindingAdapter
@@ -20,6 +23,7 @@ import kotlin.random.Random
 class ExerciseFragment : Fragment() {
     private lateinit var mBinding: FragmentExerciseBinding
     private var mTimerJob: Job?= null
+    private val mAudioPlayer = AudioNumeralPlayer()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -65,7 +69,7 @@ class ExerciseFragment : Fragment() {
         mBinding.model?.progressTimerResidueTotal?.postValue(10)
         mBinding.model?.progressExercise?.postValue(0)
         mBinding.model?.progressExerciseTotal?.postValue(100)
-
+        mBinding.model?.exerciseStatus?.postValue(ExerciseViewModel.StatusExercise.PREPARE)
         // TODO: add ring 5 second
 
         return mBinding.root
@@ -82,10 +86,16 @@ class ExerciseFragment : Fragment() {
         mBinding.model?.correctAnswer?.value?.let {
             if(value.length >= it.length) {
                 if(value.equals(it)) {
-                    createExercise()
-                    resetTimerResidue()
+                    GlobalScope.launch {
+                        mBinding.model?.exerciseStatus?.postValue(ExerciseViewModel.StatusExercise.OK)
+                        delay(1000)
+                        mBinding.model?.exerciseStatus?.postValue(ExerciseViewModel.StatusExercise.PREPARE)
+                        createExercise()
+                        resetTimerResidue()
+                    }
                 } else {
                     errorResult()
+                    mBinding.model?.exerciseStatus?.postValue(ExerciseViewModel.StatusExercise.ERROR)
                 }
             }
         }
@@ -93,6 +103,8 @@ class ExerciseFragment : Fragment() {
 
     private fun errorResult() {
         mBinding.model?.exerciseInProcess?.postValue(false)
+        mBinding.model?.exerciseStatus?.postValue(ExerciseViewModel.StatusExercise.ERROR)
+        mAudioPlayer.stopTickSound()
     }
 
     @RequiresApi(Build.VERSION_CODES.M)
@@ -102,53 +114,229 @@ class ExerciseFragment : Fragment() {
         val nextValue = Random.nextInt(1, 10000)
         mBinding.model?.correctAnswer?.postValue(nextValue.toString())
         playAudio(nextValue)
+        mBinding.model?.exerciseStatus?.postValue(ExerciseViewModel.StatusExercise.PREPARE)
     }
 
     private fun playAudio(value: Int) {
-        val audioPlayer = AudioNumeralPlayer()
-        var listNumerResourses = mutableListOf<Int>()
-        if(value < 100) {
-            listNumerResourses.add(getResources().getIdentifier("numeral_$value","raw", activity?.getPackageName()))
-        } else if((value >= 100) and (value < 1000)) {
-            listNumerResourses.add(getResources().getIdentifier("numeral_" + (value/100).toString(),"raw", activity?.getPackageName()))
-            listNumerResourses.add(getResources().getIdentifier("numeral_hundred","raw", activity?.getPackageName()))
-            listNumerResourses.add(getResources().getIdentifier("numeral_" + ((value/10) % 10).toString(),"raw", activity?.getPackageName()))
-            listNumerResourses.add(getResources().getIdentifier("numeral_" + ((value%10)).toString(),"raw", activity?.getPackageName()))
-        } else if((value >= 1000) and (value < 10000)) {
-            listNumerResourses.add(getResources().getIdentifier("numeral_" + (value/1000).toString(),"raw", activity?.getPackageName()))
-            listNumerResourses.add(getResources().getIdentifier("numeral_thousand","raw", activity?.getPackageName()))
-            listNumerResourses.add(getResources().getIdentifier("numeral_" + ((value/100) % 10).toString(),"raw", activity?.getPackageName()))
-            listNumerResourses.add(getResources().getIdentifier("numeral_hundred","raw", activity?.getPackageName()))
-            listNumerResourses.add(getResources().getIdentifier("numeral_" + (value % 100),"raw", activity?.getPackageName()))
-        } else if((value >= 10000) and (value < 100000)) {
-            listNumerResourses.add(getResources().getIdentifier("numeral_" + ((value / 1000)).toString(),"raw", activity?.getPackageName()))
-            listNumerResourses.add(getResources().getIdentifier("numeral_thousand","raw", activity?.getPackageName()))
-            listNumerResourses.add(getResources().getIdentifier("numeral_" + (value / 100 % 10).toString(),"raw", activity?.getPackageName()))
-            listNumerResourses.add(getResources().getIdentifier("numeral_hundred","raw", activity?.getPackageName()))
-            listNumerResourses.add(getResources().getIdentifier("numeral_" + (value % 100).toString(),"raw", activity?.getPackageName()))
-        } else if((value >= 100000) and (value < 1000000)) {
-            listNumerResourses.add(getResources().getIdentifier("numeral_" + (value / 100000).toString(),"raw", activity?.getPackageName()))
-            listNumerResourses.add(getResources().getIdentifier("numeral_thousand","raw", activity?.getPackageName()))
-            listNumerResourses.add(getResources().getIdentifier("numeral_" + (value / 1000 % 100).toString(),"raw", activity?.getPackageName()))
-            listNumerResourses.add(getResources().getIdentifier("numeral_" + (value % 1000 / 100).toString(),"raw", activity?.getPackageName()))
-            listNumerResourses.add(getResources().getIdentifier("numeral_hundred","raw", activity?.getPackageName()))
-            listNumerResourses.add(getResources().getIdentifier("numeral_" + (value % 100).toString(),"raw", activity?.getPackageName()))
-        } else if((value >= 1000000) and (value < 10000000)) {
-            listNumerResourses.add(getResources().getIdentifier("numeral_" + (value / 1000000).toString(),"raw", activity?.getPackageName()))
-            listNumerResourses.add(getResources().getIdentifier("numeral_million","raw", activity?.getPackageName()))
-            listNumerResourses.add(getResources().getIdentifier("numeral_" + (value / 100000 % 10).toString(),"raw", activity?.getPackageName()))
-            listNumerResourses.add(getResources().getIdentifier("numeral_hundred","raw", activity?.getPackageName()))
-            listNumerResourses.add(getResources().getIdentifier("numeral_" + (value / 1000 % 100).toString(),"raw", activity?.getPackageName()))
-            listNumerResourses.add(getResources().getIdentifier("numeral_" + (value / 100 % 10).toString(),"raw", activity?.getPackageName()))
-            listNumerResourses.add(getResources().getIdentifier("numeral_hundred","raw", activity?.getPackageName()))
-            listNumerResourses.add(getResources().getIdentifier("numeral_" + (value % 100).toString(),"raw", activity?.getPackageName()))
-        }
-
-        audioPlayer.addValueToPlay(context, listNumerResourses) {}
+        Handler(Looper.getMainLooper()).post(kotlinx.coroutines.Runnable {
+            var listNumerResourses = mutableListOf<Int>()
+            if (value < 100) {
+                listNumerResourses.add(
+                    getResources().getIdentifier(
+                        "numeral_$value",
+                        "raw",
+                        activity?.getPackageName()
+                    )
+                )
+            } else if ((value >= 100) and (value < 1000)) {
+                listNumerResourses.add(
+                    getResources().getIdentifier(
+                        "numeral_" + (value / 100).toString(),
+                        "raw",
+                        activity?.getPackageName()
+                    )
+                )
+                listNumerResourses.add(
+                    getResources().getIdentifier(
+                        "numeral_hundred",
+                        "raw",
+                        activity?.getPackageName()
+                    )
+                )
+                listNumerResourses.add(
+                    getResources().getIdentifier(
+                        "numeral_" + ((value / 10) % 10).toString(),
+                        "raw",
+                        activity?.getPackageName()
+                    )
+                )
+                listNumerResourses.add(
+                    getResources().getIdentifier(
+                        "numeral_" + ((value % 10)).toString(),
+                        "raw",
+                        activity?.getPackageName()
+                    )
+                )
+            } else if ((value >= 1000) and (value < 10000)) {
+                listNumerResourses.add(
+                    getResources().getIdentifier(
+                        "numeral_" + (value / 1000).toString(),
+                        "raw",
+                        activity?.getPackageName()
+                    )
+                )
+                listNumerResourses.add(
+                    getResources().getIdentifier(
+                        "numeral_thousand",
+                        "raw",
+                        activity?.getPackageName()
+                    )
+                )
+                listNumerResourses.add(
+                    getResources().getIdentifier(
+                        "numeral_" + ((value / 100) % 10).toString(),
+                        "raw",
+                        activity?.getPackageName()
+                    )
+                )
+                listNumerResourses.add(
+                    getResources().getIdentifier(
+                        "numeral_hundred",
+                        "raw",
+                        activity?.getPackageName()
+                    )
+                )
+                listNumerResourses.add(
+                    getResources().getIdentifier(
+                        "numeral_" + (value % 100),
+                        "raw",
+                        activity?.getPackageName()
+                    )
+                )
+            } else if ((value >= 10000) and (value < 100000)) {
+                listNumerResourses.add(
+                    getResources().getIdentifier(
+                        "numeral_" + ((value / 1000)).toString(),
+                        "raw",
+                        activity?.getPackageName()
+                    )
+                )
+                listNumerResourses.add(
+                    getResources().getIdentifier(
+                        "numeral_thousand",
+                        "raw",
+                        activity?.getPackageName()
+                    )
+                )
+                listNumerResourses.add(
+                    getResources().getIdentifier(
+                        "numeral_" + (value / 100 % 10).toString(),
+                        "raw",
+                        activity?.getPackageName()
+                    )
+                )
+                listNumerResourses.add(
+                    getResources().getIdentifier(
+                        "numeral_hundred",
+                        "raw",
+                        activity?.getPackageName()
+                    )
+                )
+                listNumerResourses.add(
+                    getResources().getIdentifier(
+                        "numeral_" + (value % 100).toString(),
+                        "raw",
+                        activity?.getPackageName()
+                    )
+                )
+            } else if ((value >= 100000) and (value < 1000000)) {
+                listNumerResourses.add(
+                    getResources().getIdentifier(
+                        "numeral_" + (value / 100000).toString(),
+                        "raw",
+                        activity?.getPackageName()
+                    )
+                )
+                listNumerResourses.add(
+                    getResources().getIdentifier(
+                        "numeral_thousand",
+                        "raw",
+                        activity?.getPackageName()
+                    )
+                )
+                listNumerResourses.add(
+                    getResources().getIdentifier(
+                        "numeral_" + (value / 1000 % 100).toString(),
+                        "raw",
+                        activity?.getPackageName()
+                    )
+                )
+                listNumerResourses.add(
+                    getResources().getIdentifier(
+                        "numeral_" + (value % 1000 / 100).toString(),
+                        "raw",
+                        activity?.getPackageName()
+                    )
+                )
+                listNumerResourses.add(
+                    getResources().getIdentifier(
+                        "numeral_hundred",
+                        "raw",
+                        activity?.getPackageName()
+                    )
+                )
+                listNumerResourses.add(
+                    getResources().getIdentifier(
+                        "numeral_" + (value % 100).toString(),
+                        "raw",
+                        activity?.getPackageName()
+                    )
+                )
+            } else if ((value >= 1000000) and (value < 10000000)) {
+                listNumerResourses.add(
+                    getResources().getIdentifier(
+                        "numeral_" + (value / 1000000).toString(),
+                        "raw",
+                        activity?.getPackageName()
+                    )
+                )
+                listNumerResourses.add(
+                    getResources().getIdentifier(
+                        "numeral_million",
+                        "raw",
+                        activity?.getPackageName()
+                    )
+                )
+                listNumerResourses.add(
+                    getResources().getIdentifier(
+                        "numeral_" + (value / 100000 % 10).toString(),
+                        "raw",
+                        activity?.getPackageName()
+                    )
+                )
+                listNumerResourses.add(
+                    getResources().getIdentifier(
+                        "numeral_hundred",
+                        "raw",
+                        activity?.getPackageName()
+                    )
+                )
+                listNumerResourses.add(
+                    getResources().getIdentifier(
+                        "numeral_" + (value / 1000 % 100).toString(),
+                        "raw",
+                        activity?.getPackageName()
+                    )
+                )
+                listNumerResourses.add(
+                    getResources().getIdentifier(
+                        "numeral_" + (value / 100 % 10).toString(),
+                        "raw",
+                        activity?.getPackageName()
+                    )
+                )
+                listNumerResourses.add(
+                    getResources().getIdentifier(
+                        "numeral_hundred",
+                        "raw",
+                        activity?.getPackageName()
+                    )
+                )
+                listNumerResourses.add(
+                    getResources().getIdentifier(
+                        "numeral_" + (value % 100).toString(),
+                        "raw",
+                        activity?.getPackageName()
+                    )
+                )
+            }
+            mAudioPlayer.addValueToPlay(context, listNumerResourses) {}
+        })
     }
 
     private fun resetTimerResidue() {
         mBinding.model?.progressTimerResidue?.postValue(10)
+        mBinding.model?.exerciseInProcess?.postValue(true)
         mBinding.model?.progressExercise?.value?.let {
             mBinding.model?.progressExercise?.postValue(it + 1)
         }
@@ -157,20 +345,16 @@ class ExerciseFragment : Fragment() {
 
     @RequiresApi(Build.VERSION_CODES.M)
     private fun createTimerResidue() : Job {
-        createExercise()
-        resetTimerResidue()
-
         return GlobalScope.launch {
             while(true) {
-                mBinding.model?.progressTimerResidue?.value?.let {
-                    if (it != 0) {
-                        mBinding.model?.exerciseInProcess?.postValue(true)
-                        mBinding.model?.progressTimerResidue?.postValue(it - 1)
-                    } else {
-                        mBinding.model?.exerciseInProcess?.value?.let {
-                            if(!it) {
-                                errorResult()
-                            }
+                if(mBinding.model?.exerciseInProcess?.value == true) {
+                    mBinding.model?.progressTimerResidue?.value?.let {
+                        if (it != 0) {
+                            mBinding.model?.exerciseInProcess?.postValue(true)
+                            mBinding.model?.progressTimerResidue?.postValue(it - 1)
+                        } else {
+                            mBinding.model?.exerciseInProcess?.postValue(false)
+                            errorResult()
                         }
                     }
                 }
@@ -183,12 +367,16 @@ class ExerciseFragment : Fragment() {
         super.onDestroy()
         mTimerJob?.cancel()
         mTimerJob = null
+        mAudioPlayer.stopTickSound()
     }
 
     override fun onResume() {
         super.onResume()
         if(mTimerJob == null) {
             mTimerJob = createTimerResidue()
+            createExercise()
+            resetTimerResidue()
+            mAudioPlayer.createTickSound(context)
         } else {
             mTimerJob?.start()
         }
@@ -207,6 +395,50 @@ class ExerciseFragment : Fragment() {
                 value = ((current.toFloat() / total.toFloat()) * 100).toInt()
             }
             progress.setProgress(value)
+        }
+
+        @JvmStatic
+        @BindingAdapter("app:statusImageAdapter")
+        fun convertStatusToIcon(imageView: ImageView, status: ExerciseViewModel.StatusExercise) {
+            when(status) {
+                ExerciseViewModel.StatusExercise.PREPARE -> {
+                    Handler(Looper.getMainLooper()).post(kotlinx.coroutines.Runnable {
+                        imageView.setImageDrawable(imageView.context.getDrawable(R.drawable.ic_hourglass_start))
+                    })
+                }
+                ExerciseViewModel.StatusExercise.OK -> {
+                    Handler(Looper.getMainLooper()).post(kotlinx.coroutines.Runnable {
+                        imageView.setImageDrawable(imageView.context.getDrawable(R.drawable.ic_check))
+                    })
+                }
+                ExerciseViewModel.StatusExercise.ERROR -> {
+                    Handler(Looper.getMainLooper()).post(kotlinx.coroutines.Runnable {
+                        imageView.setImageDrawable(imageView.context.getDrawable(R.drawable.ic_times))
+                    })
+                }
+            }
+        }
+
+        @JvmStatic
+        @BindingAdapter("app:textError")
+        fun convertStatusToIcon(view: View, status: ExerciseViewModel.StatusExercise) {
+            when(status) {
+                ExerciseViewModel.StatusExercise.PREPARE -> {
+                    Handler(Looper.getMainLooper()).post(kotlinx.coroutines.Runnable {
+                        view.visibility = View.GONE
+                    })
+                }
+                ExerciseViewModel.StatusExercise.OK -> {
+                    Handler(Looper.getMainLooper()).post(kotlinx.coroutines.Runnable {
+                        view.visibility = View.GONE
+                    })
+                }
+                ExerciseViewModel.StatusExercise.ERROR -> {
+                    Handler(Looper.getMainLooper()).post(kotlinx.coroutines.Runnable {
+                        view.visibility = View.VISIBLE
+                    })
+                }
+            }
         }
     }
 }

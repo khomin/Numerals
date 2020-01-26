@@ -8,7 +8,7 @@ class ExerciseViewModel() : ViewModel() {
     val progressExercise = MutableLiveData<Int>().apply { value = 0 }
     val progressExerciseTotal = MutableLiveData<Int>().apply { value = 0 }
 
-    val progressTimerResidue = MutableLiveData<Int>().apply { value = 0 }
+    val progressTimerResidue = MutableLiveData<Int>().apply { value = 100 }
     val progressTimerResidueTotal = MutableLiveData<Int>().apply { value = 0 }
 
     val typeLevelExercise = MutableLiveData<LevelExerciseType>().apply { value = LevelExerciseType.MEDIUM }
@@ -17,4 +17,11 @@ class ExerciseViewModel() : ViewModel() {
     val inputValue = MutableLiveData<String>().apply { value = "" }
 
     val exerciseInProcess = MutableLiveData<Boolean>().apply { value = true }
+
+    enum class StatusExercise(value: Int) {
+        PREPARE(0),
+        OK(1),
+        ERROR(2)
+    }
+    val exerciseStatus = MutableLiveData<StatusExercise>().apply { value = StatusExercise.PREPARE }
 }

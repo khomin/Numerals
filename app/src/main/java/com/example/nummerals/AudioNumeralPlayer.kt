@@ -17,6 +17,7 @@ class AudioNumeralPlayer : Activity() {
     private var mMediaPlayerArray: MutableList<MediaPlayer> = mutableListOf()
     private var mCallbackFinish: (()->Unit) ?= null
     private var mContext: Context?= null
+    private var mMediaPlayerTick: MediaPlayer?= null
 
     @RequiresApi(Build.VERSION_CODES.M)
     fun addValueToPlay(context: Context?, value: List<Int>, callbackFinish: ()->Unit) {
@@ -48,5 +49,21 @@ class AudioNumeralPlayer : Activity() {
                 mCallbackFinish?.invoke()
             }
         }
+    }
+
+    fun createTickSound(context: Context?) {
+        context?.let {
+            if(mMediaPlayerTick == null) {
+                mMediaPlayerTick = MediaPlayer.create(it, it.resources.getIdentifier("clock_tick", "raw", context.getPackageName()))
+                mMediaPlayerTick?.start()
+                mMediaPlayerTick?.setLooping(true)
+            } else {
+                mMediaPlayerTick?.start()
+            }
+        }
+    }
+
+    fun stopTickSound() {
+        mMediaPlayerTick?.stop()
     }
 }

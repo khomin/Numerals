@@ -10,7 +10,7 @@
         android:id="@+id/mainScreenFragment"
         android:name="com.example.nummerals.MainScreenFragment"
         tools:layout="@layout/fragment_main_screen"
-        android:label="MainScreenFragment">
+        android:label="Main">
         <action
             android:id="@+id/action_mainScreenFragment_to_selectLevelFragment"
             app:destination="@id/selectLevelFragment" />
@@ -21,12 +21,12 @@
     <fragment
         android:id="@+id/exerciseFragment"
         android:name="com.example.nummerals.ExerciseFragment"
-        android:label="ExerciseFragment"
+        android:label="Exercise"
         tools:layout="@layout/fragment_exercise"/>
     <fragment
         android:id="@+id/aboutFragment"
         android:name="AboutFragment"
-        android:label="AboutFragment"
+        android:label="About"
         tools:layout="@layout/fragment_about">
         <action
             android:id="@+id/action_aboutFragment_to_aboutFragmentLicenses"
@@ -35,7 +35,7 @@
     <fragment
         android:id="@+id/selectLevelFragment"
         android:name="com.example.nummerals.SelectLevelFragment"
-        android:label="SelectLevelFragment"
+        android:label="Select level"
         tools:layout="@layout/fragment_select_level_exercise">
         <action
             android:id="@+id/action_selectLevelFragment_to_exerciseFragment"
@@ -44,9 +44,9 @@
     <activity
         android:id="@+id/mainActivity"
         android:name="com.example.nummerals.MainActivity"
-        android:label="MainActivity" />
+        android:label="Main" />
     <fragment
         android:id="@+id/aboutFragmentLicenses"
         android:name="AboutFragmentLicenses"
-        android:label="AboutFragmentLicenses" />
+        android:label="About licenses" />
 </navigation>
