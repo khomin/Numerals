@@ -24,6 +24,7 @@ class ExerciseFragment : Fragment() {
     private lateinit var mBinding: FragmentExerciseBinding
     private var mTimerJob: Job?= null
     private val mAudioPlayer = AudioNumeralPlayer()
+    private var mFinalDialog: FinalDialog ?= null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -42,6 +43,8 @@ class ExerciseFragment : Fragment() {
                 Navigation.findNavController(it).popBackStack(R.id.mainScreenFragment, false)
             }
         }
+
+        mFinalDialog = FinalDialog(inflater)
 
         mBinding.controlRepeat?.setOnClickListener {
             mBinding.model?.correctAnswer?.value?.let {
@@ -91,11 +94,11 @@ class ExerciseFragment : Fragment() {
                         delay(1000)
                         mBinding.model?.exerciseStatus?.postValue(ExerciseViewModel.StatusExercise.PREPARE)
                         createExercise()
-                        resetTimerResidue()
+                        updateStatsAndResetTimer()
                     }
                 } else {
-                    errorResult()
                     mBinding.model?.exerciseStatus?.postValue(ExerciseViewModel.StatusExercise.ERROR)
+                    errorResult()
                 }
             }
         }
@@ -105,6 +108,18 @@ class ExerciseFragment : Fragment() {
         mBinding.model?.exerciseInProcess?.postValue(false)
         mBinding.model?.exerciseStatus?.postValue(ExerciseViewModel.StatusExercise.ERROR)
         mAudioPlayer.stopTickSound()
+        mFinalDialog?.show(
+            mBinding.model?.correctAnswer?.value?.toInt(),
+            mBinding.model?.inputValue?.value?.toInt(),
+            mBinding.model?.progressExercise?.value) {
+            /* reset before navigateup */
+            mBinding.model?.correctAnswer?.postValue("")
+            mBinding.model?.inputValue?.postValue("")
+            mBinding.model?.progressExercise?.postValue(0)
+            view?.let {
+                Navigation.findNavController(it).popBackStack(R.id.mainScreenFragment, false)
+            }
+        }
     }
 
     @RequiresApi(Build.VERSION_CODES.M)
@@ -279,7 +294,7 @@ class ExerciseFragment : Fragment() {
         })
     }
 
-    private fun resetTimerResidue() {
+    private fun updateStatsAndResetTimer() {
         mBinding.model?.progressTimerResidue?.postValue(10)
         mBinding.model?.exerciseInProcess?.postValue(true)
         mBinding.model?.progressExercise?.value?.let {
@@ -320,7 +335,7 @@ class ExerciseFragment : Fragment() {
         if(mTimerJob == null) {
             mTimerJob = createTimerResidue()
             createExercise()
-            resetTimerResidue()
+            updateStatsAndResetTimer()
             mAudioPlayer.createTickSound(context)
         } else {
             mTimerJob?.start()

@@ -30,5 +30,7 @@
     <string name="sourse">github</string>
     <string name="main">Main screen</string>
     <string name="about">About</string>
+    <string name="final_dialog_title">Result</string>
+    <string name="ok_button">Ok</string>
 
 </resources>
