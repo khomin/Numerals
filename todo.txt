@@ -1,0 +1,4 @@
+1) error pronounces
+2) error final view
+2) animation of press button
+4) fix layout (when errr result showed)

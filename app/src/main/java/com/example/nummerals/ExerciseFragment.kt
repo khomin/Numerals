@@ -111,7 +111,7 @@ class ExerciseFragment : Fragment() {
     private fun createExercise() {
         mBinding.model?.exerciseInProcess?.postValue(true)
         mBinding.model?.inputValue?.postValue("")
-        val nextValue = Random.nextInt(1, 10000)
+        val nextValue = Random.nextInt(1, 9999999)
         mBinding.model?.correctAnswer?.postValue(nextValue.toString())
         playAudio(nextValue)
         mBinding.model?.exerciseStatus?.postValue(ExerciseViewModel.StatusExercise.PREPARE)
@@ -119,7 +119,7 @@ class ExerciseFragment : Fragment() {
 
     private fun playAudio(value: Int) {
         Handler(Looper.getMainLooper()).post(kotlinx.coroutines.Runnable {
-            var listNumerResourses = mutableListOf<Int>()
+            val listNumerResourses = mutableListOf<Int>()
             if (value < 100) {
                 listNumerResourses.add(
                     getResources().getIdentifier(
@@ -129,70 +129,15 @@ class ExerciseFragment : Fragment() {
                     )
                 )
             } else if ((value >= 100) and (value < 1000)) {
-                listNumerResourses.add(
-                    getResources().getIdentifier(
-                        "numeral_" + (value / 100).toString(),
-                        "raw",
-                        activity?.getPackageName()
-                    )
-                )
-                listNumerResourses.add(
-                    getResources().getIdentifier(
-                        "numeral_hundred",
-                        "raw",
-                        activity?.getPackageName()
-                    )
-                )
-                listNumerResourses.add(
-                    getResources().getIdentifier(
-                        "numeral_" + ((value / 10) % 10).toString(),
-                        "raw",
-                        activity?.getPackageName()
-                    )
-                )
-                listNumerResourses.add(
-                    getResources().getIdentifier(
-                        "numeral_" + ((value % 10)).toString(),
-                        "raw",
-                        activity?.getPackageName()
-                    )
-                )
+                listNumerResourses.add(getResources().getIdentifier("numeral_" + (value / 100).toString(), "raw",activity?.getPackageName()))
+                listNumerResourses.add(getResources().getIdentifier("numeral_hundred","raw",activity?.getPackageName()))
+                listNumerResourses.add(getResources().getIdentifier("numeral_" + (value % 100).toString(),"raw", activity?.getPackageName()))
             } else if ((value >= 1000) and (value < 10000)) {
-                listNumerResourses.add(
-                    getResources().getIdentifier(
-                        "numeral_" + (value / 1000).toString(),
-                        "raw",
-                        activity?.getPackageName()
-                    )
-                )
-                listNumerResourses.add(
-                    getResources().getIdentifier(
-                        "numeral_thousand",
-                        "raw",
-                        activity?.getPackageName()
-                    )
-                )
-                listNumerResourses.add(
-                    getResources().getIdentifier(
-                        "numeral_" + ((value / 100) % 10).toString(),
-                        "raw",
-                        activity?.getPackageName()
-                    )
-                )
-                listNumerResourses.add(
-                    getResources().getIdentifier(
-                        "numeral_hundred",
-                        "raw",
-                        activity?.getPackageName()
-                    )
-                )
-                listNumerResourses.add(
-                    getResources().getIdentifier(
-                        "numeral_" + (value % 100),
-                        "raw",
-                        activity?.getPackageName()
-                    )
-                )
+                listNumerResourses.add(getResources().getIdentifier("numeral_" + (value / 1000).toString(),"raw",activity?.getPackageName()))
+                listNumerResourses.add(getResources().getIdentifier("numeral_thousand","raw", activity?.getPackageName()))
+                listNumerResourses.add(getResources().getIdentifier("numeral_" + ((value / 100) % 10).toString(),"raw",activity?.getPackageName()))
+                listNumerResourses.add(getResources().getIdentifier("numeral_hundred","raw",activity?.getPackageName()))
+                listNumerResourses.add(getResources().getIdentifier("numeral_" + (value % 100),"raw",activity?.getPackageName()))
             } else if ((value >= 10000) and (value < 100000)) {
                 listNumerResourses.add(
                     getResources().getIdentifier(
