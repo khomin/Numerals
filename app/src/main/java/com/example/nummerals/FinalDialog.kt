@@ -10,8 +10,8 @@ import kotlinx.android.synthetic.main.final_result_dialog.*
 class FinalDialog(val mInflater: LayoutInflater) {
 
     fun show(
-        correct: Int?,
-        lastValue: Int?,
+        correct: String?,
+        lastValue: String?,
         progress: Int?,
         callbackDismissCallback: () -> Unit
     ) {
@@ -25,8 +25,8 @@ class FinalDialog(val mInflater: LayoutInflater) {
                             .setPositiveButton(mInflater.context.getString(R.string.ok_button)) { _, _ -> }
                             .create()
                         changeIdDialog.show()
-                        changeIdDialog.errorValue.text = lastValue.toString()
-                        changeIdDialog.correctValue.text = correct.toString()
+                        changeIdDialog.errorValue.text = if(lastValue.isNotEmpty()) { lastValue } else { "-" }
+                        changeIdDialog.correctValue.text = correct
                         val resultMessage = "Correct answers, total: $progress"
                         changeIdDialog.finalText.text = resultMessage
                         val acceptDialogButton =

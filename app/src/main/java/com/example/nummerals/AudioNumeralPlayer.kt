@@ -15,24 +15,26 @@ import kotlinx.coroutines.delay
 
 class AudioNumeralPlayer : Activity() {
     private var mMediaPlayerArray: MutableList<MediaPlayer> = mutableListOf()
-    private var mCallbackFinish: (()->Unit) ?= null
-    private var mContext: Context?= null
-    private var mMediaPlayerTick: MediaPlayer?= null
+    private var mCallbackFinish: (() -> Unit)? = null
+    private var mContext: Context? = null
+    private var mMediaPlayerTick: MediaPlayer? = null
 
     @RequiresApi(Build.VERSION_CODES.M)
-    fun addValueToPlay(context: Context?, value: List<Int>, callbackFinish: ()->Unit) {
-        context?.let {
-            mContext = it
-            mCallbackFinish = callbackFinish
+    fun addValueToPlay(context: Context?, value: List<Int>, callbackFinish: () -> Unit) {
+        if(mMediaPlayerArray.isEmpty()) {
+            context?.let {
+                mContext = it
+                mCallbackFinish = callbackFinish
 
-            for(i in value) {
-                val player = MediaPlayer.create(mContext, i)
-                player?.setPlaybackParams(player.playbackParams.setSpeed(1.2f))
-                player.pause()
-                mMediaPlayerArray.add(player)
+                for (i in value) {
+                    val player = MediaPlayer.create(mContext, i)
+                    player?.setPlaybackParams(player.playbackParams.setSpeed(1.2f))
+                    player.pause()
+                    mMediaPlayerArray.add(player)
+                }
+
+                createListenerEndPlay()
             }
-
-            createListenerEndPlay()
         }
     }
 
@@ -40,21 +42,23 @@ class AudioNumeralPlayer : Activity() {
     private fun createListenerEndPlay() {
         GlobalScope.launch {
             withContext(coroutineContext) {
-                while(mMediaPlayerArray.isNotEmpty()) {
+                while (mMediaPlayerArray.isNotEmpty()) {
                     mMediaPlayerArray.first().start()
-                    delay(mMediaPlayerArray.first().duration.toLong()-200)
-
+                    delay(mMediaPlayerArray.first().duration.toLong() - 200)
                     mMediaPlayerArray.remove(mMediaPlayerArray.first())
                 }
-                mCallbackFinish?.invoke()
             }
+            mCallbackFinish?.invoke()
         }
     }
 
     fun createTickSound(context: Context?) {
         context?.let {
-            if(mMediaPlayerTick == null) {
-                mMediaPlayerTick = MediaPlayer.create(it, it.resources.getIdentifier("clock_tick", "raw", context.getPackageName()))
+            if (mMediaPlayerTick == null) {
+                mMediaPlayerTick = MediaPlayer.create(
+                    it,
+                    it.resources.getIdentifier("clock_tick", "raw", context.getPackageName())
+                )
                 mMediaPlayerTick?.start()
                 mMediaPlayerTick?.setLooping(true)
             } else {

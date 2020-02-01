@@ -18,6 +18,7 @@ import androidx.navigation.Navigation
 import com.example.nummerals.databinding.FragmentExerciseBinding
 import com.example.nummerals.viewModels.ExerciseViewModel
 import kotlinx.coroutines.*
+import kotlinx.coroutines.sync.Mutex
 import kotlin.random.Random
 
 class ExerciseFragment : Fragment() {
@@ -25,6 +26,7 @@ class ExerciseFragment : Fragment() {
     private var mTimerJob: Job?= null
     private val mAudioPlayer = AudioNumeralPlayer()
     private var mFinalDialog: FinalDialog ?= null
+    private val mMutexUpdaterStats = Mutex()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -69,7 +71,6 @@ class ExerciseFragment : Fragment() {
         mBinding.control8?.setOnClickListener { addInputValue(8) }
         mBinding.control9?.setOnClickListener { addInputValue(9) }
 
-        mBinding.model?.progressTimerResidueTotal?.postValue(10)
         mBinding.model?.progressExercise?.postValue(0)
         mBinding.model?.progressExerciseTotal?.postValue(100)
         mBinding.model?.exerciseStatus?.postValue(ExerciseViewModel.StatusExercise.PREPARE)
@@ -109,8 +110,8 @@ class ExerciseFragment : Fragment() {
         mBinding.model?.exerciseStatus?.postValue(ExerciseViewModel.StatusExercise.ERROR)
         mAudioPlayer.stopTickSound()
         mFinalDialog?.show(
-            mBinding.model?.correctAnswer?.value?.toInt(),
-            mBinding.model?.inputValue?.value?.toInt(),
+            mBinding.model?.correctAnswer?.value,
+            mBinding.model?.inputValue?.value,
             mBinding.model?.progressExercise?.value) {
             /* reset before navigateup */
             mBinding.model?.correctAnswer?.postValue("")
@@ -295,18 +296,25 @@ class ExerciseFragment : Fragment() {
     }
 
     private fun updateStatsAndResetTimer() {
-        mBinding.model?.progressTimerResidue?.postValue(10)
-        mBinding.model?.exerciseInProcess?.postValue(true)
-        mBinding.model?.progressExercise?.value?.let {
-            mBinding.model?.progressExercise?.postValue(it + 1)
+        GlobalScope.launch {
+            withContext(coroutineContext) {
+                mMutexUpdaterStats.lock()
+                mBinding.model?.progressTimerResidue?.postValue(ConstValues.maxPercentExercise)
+                mBinding.model?.exerciseInProcess?.postValue(true)
+                mBinding.model?.progressExercise?.value?.let {
+                    mBinding.model?.progressExercise?.postValue(it + 1)
+                }
+                mBinding.model?.inputValue?.postValue("")
+                mMutexUpdaterStats.unlock()
+            }
         }
-        mBinding.model?.inputValue?.postValue("")
     }
 
     @RequiresApi(Build.VERSION_CODES.M)
     private fun createTimerResidue() : Job {
         return GlobalScope.launch {
             while(true) {
+                mMutexUpdaterStats.lock()
                 if(mBinding.model?.exerciseInProcess?.value == true) {
                     mBinding.model?.progressTimerResidue?.value?.let {
                         if (it != 0) {
@@ -318,6 +326,7 @@ class ExerciseFragment : Fragment() {
                         }
                     }
                 }
+                mMutexUpdaterStats.unlock()
                 delay(1000)
             }
         }
@@ -344,16 +353,12 @@ class ExerciseFragment : Fragment() {
 
     companion object {
         @JvmStatic
-        @BindingAdapter(value = ["app:ProgressFromInt","app:ProgressFromTotal"], requireAll = true)
-        fun convertIntToProgressBard(progress: ProgressBar, valueCurrent: Int?, valueTotal: Int?) {
+        @BindingAdapter("app:ProgressFromInt")
+        fun convertIntToProgressBard(progress: ProgressBar, valueCurrent: Int?) {
             var current = 0
-            var total = 0
             var value = 0
             valueCurrent?.let { current = it }
-            valueTotal?.let { total = it }
-            if(total != 0) {
-                value = ((current.toFloat() / total.toFloat()) * 100).toInt()
-            }
+            value = ((current.toFloat() / ConstValues.maxPercentExercise.toFloat()) * 100).toInt()
             progress.setProgress(value)
         }
 

@@ -6,4 +6,5 @@
     <color name="colorCalcButtons">#8BF79B</color>
     <color name="red">#FF160D</color>
     <color name="green">#00FF24</color>
+    <color name="bigButton">#FAFAFA</color>
 </resources>

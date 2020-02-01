@@ -71,7 +71,6 @@
                 android:min="0"
                 android:rotation="270"
                 app:ProgressFromInt="@{model.progressTimerResidue}"
-                app:ProgressFromTotal="@{model.progressTimerResidueTotal}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="1.0"
@@ -101,50 +100,35 @@
                     android:layout_weight="1"
                     android:orientation="horizontal">
 
-                    <LinearLayout
+                    <Button
+                        android:id="@+id/control7"
                         android:layout_width="wrap_content"
                         android:layout_height="fill_parent"
                         android:layout_weight="1"
-                        android:background="@drawable/border_layout"
-                        android:gravity="center_horizontal">
+                        android:enabled="@{model.exerciseInProcess}"
+                        style="@style/Widget.MaterialComponents.Button.TextButton"
+                        android:text="@string/_7">
+                    </Button>
 
-                        <TextView
-                            android:id="@+id/control_7"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:gravity="center"
-                            android:text="@string/_7" />
-                    </LinearLayout>
-
-                    <LinearLayout
+                    <Button
+                        android:id="@+id/control8"
                         android:layout_width="wrap_content"
                         android:layout_height="fill_parent"
                         android:layout_weight="1"
-                        android:background="@drawable/border_layout"
-                        android:gravity="center_horizontal">
+                        android:enabled="@{model.exerciseInProcess}"
+                        style="@style/Widget.MaterialComponents.Button.TextButton"
+                        android:text="@string/_8">
+                    </Button>
 
-                        <TextView
-                            android:id="@+id/control_8"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:gravity="center"
-                            android:text="@string/_8" />
-                    </LinearLayout>
-
-                    <LinearLayout
+                    <Button
+                        android:id="@+id/control9"
                         android:layout_width="wrap_content"
                         android:layout_height="fill_parent"
                         android:layout_weight="1"
-                        android:background="@drawable/border_layout"
-                        android:gravity="center_horizontal">
-
-                        <TextView
-                            android:id="@+id/control_9"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:gravity="center"
-                            android:text="@string/_9" />
-                    </LinearLayout>
+                        android:enabled="@{model.exerciseInProcess}"
+                        style="@style/Widget.MaterialComponents.Button.TextButton"
+                        android:text="@string/_9">
+                    </Button>
                 </LinearLayout>
 
                 <LinearLayout
@@ -153,50 +137,35 @@
                     android:layout_weight="1"
                     android:orientation="horizontal">
 
-                    <LinearLayout
+                    <Button
+                        android:id="@+id/control4"
                         android:layout_width="wrap_content"
                         android:layout_height="fill_parent"
                         android:layout_weight="1"
-                        android:background="@drawable/border_layout"
-                        android:gravity="center_horizontal">
+                        android:enabled="@{model.exerciseInProcess}"
+                        style="@style/Widget.MaterialComponents.Button.TextButton"
+                        android:text="@string/_4">
+                    </Button>
 
-                        <TextView
-                            android:id="@+id/control_4"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:gravity="center"
-                            android:text="@string/_4" />
-                    </LinearLayout>
-
-                    <LinearLayout
+                    <Button
+                        android:id="@+id/control5"
                         android:layout_width="wrap_content"
                         android:layout_height="fill_parent"
                         android:layout_weight="1"
-                        android:background="@drawable/border_layout"
-                        android:gravity="center_horizontal">
+                        android:enabled="@{model.exerciseInProcess}"
+                        style="@style/Widget.MaterialComponents.Button.TextButton"
+                        android:text="@string/_5">
+                    </Button>
 
-                        <TextView
-                            android:id="@+id/control_5"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:gravity="center"
-                            android:text="@string/_5" />
-                    </LinearLayout>
-
-                    <LinearLayout
+                    <Button
+                        android:id="@+id/control6"
                         android:layout_width="wrap_content"
                         android:layout_height="fill_parent"
                         android:layout_weight="1"
-                        android:background="@drawable/border_layout"
-                        android:gravity="center_horizontal">
-
-                        <TextView
-                            android:id="@+id/control_6"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:gravity="center"
-                            android:text="@string/_6" />
-                    </LinearLayout>
+                        android:enabled="@{model.exerciseInProcess}"
+                        style="@style/Widget.MaterialComponents.Button.TextButton"
+                        android:text="@string/_6">
+                    </Button>
                 </LinearLayout>
 
                 <LinearLayout
@@ -205,50 +174,35 @@
                     android:layout_weight="1"
                     android:orientation="horizontal">
 
-                    <LinearLayout
+                    <Button
+                        android:id="@+id/control1"
                         android:layout_width="wrap_content"
                         android:layout_height="fill_parent"
                         android:layout_weight="1"
-                        android:background="@drawable/border_layout"
-                        android:gravity="center_horizontal">
+                        android:enabled="@{model.exerciseInProcess}"
+                        style="@style/Widget.MaterialComponents.Button.TextButton"
+                        android:text="@string/_1">
+                    </Button>
 
-                        <TextView
-                            android:id="@+id/control_1"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:gravity="center"
-                            android:text="@string/_1" />
-                    </LinearLayout>
-
-                    <LinearLayout
+                    <Button
+                        android:id="@+id/control2"
                         android:layout_width="wrap_content"
                         android:layout_height="fill_parent"
                         android:layout_weight="1"
-                        android:background="@drawable/border_layout"
-                        android:gravity="center_horizontal">
+                        android:enabled="@{model.exerciseInProcess}"
+                        style="@style/Widget.MaterialComponents.Button.TextButton"
+                        android:text="@string/_2">
+                    </Button>
 
-                        <TextView
-                            android:id="@+id/control_2"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:gravity="center"
-                            android:text="@string/_2" />
-                    </LinearLayout>
-
-                    <LinearLayout
+                    <Button
+                        android:id="@+id/control3"
                         android:layout_width="wrap_content"
                         android:layout_height="fill_parent"
                         android:layout_weight="1"
-                        android:background="@drawable/border_layout"
-                        android:gravity="center_horizontal">
-
-                        <TextView
-                            android:id="@+id/control_3"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:gravity="center"
-                            android:text="@string/_3" />
-                    </LinearLayout>
+                        android:enabled="@{model.exerciseInProcess}"
+                        style="@style/Widget.MaterialComponents.Button.TextButton"
+                        android:text="@string/_3">
+                    </Button>
                 </LinearLayout>
 
                 <LinearLayout
@@ -257,50 +211,35 @@
                     android:layout_weight="1"
                     android:orientation="horizontal">
 
-                    <LinearLayout
+                    <Button
+                        android:id="@+id/controlRemove"
                         android:layout_width="wrap_content"
                         android:layout_height="fill_parent"
                         android:layout_weight="1"
-                        android:background="@drawable/border_layout"
-                        android:gravity="center_horizontal">
+                        android:enabled="@{model.exerciseInProcess}"
+                        style="@style/Widget.MaterialComponents.Button.TextButton"
+                        android:text="@string/remove">
+                    </Button>
 
-                        <TextView
-                            android:id="@+id/control_remove"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:gravity="center"
-                            android:text="@string/remove" />
-                    </LinearLayout>
-
-                    <LinearLayout
+                    <Button
+                        android:id="@+id/control0"
                         android:layout_width="wrap_content"
                         android:layout_height="fill_parent"
                         android:layout_weight="1"
-                        android:background="@drawable/border_layout"
-                        android:gravity="center_horizontal">
+                        android:enabled="@{model.exerciseInProcess}"
+                        style="@style/Widget.MaterialComponents.Button.TextButton"
+                        android:text="@string/_0">
+                    </Button>
 
-                        <TextView
-                            android:id="@+id/control_0"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:gravity="center"
-                            android:text="@string/_0" />
-                    </LinearLayout>
-
-                    <LinearLayout
+                    <Button
+                        android:id="@+id/controlRepeat"
                         android:layout_width="wrap_content"
                         android:layout_height="fill_parent"
                         android:layout_weight="1"
-                        android:background="@drawable/border_layout"
-                        android:gravity="center_horizontal">
-
-                        <TextView
-                            android:id="@+id/control_repeat"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:gravity="center"
-                            android:text="@string/repeat" />
-                    </LinearLayout>
+                        android:enabled="@{model.exerciseInProcess}"
+                        style="@style/Widget.MaterialComponents.Button.TextButton"
+                        android:text="@string/repeat">
+                    </Button>
                 </LinearLayout>
             </LinearLayout>
 
