@@ -1,6 +1,8 @@
 package com.example.nummerals
 
 import android.app.AlertDialog
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
@@ -11,6 +13,7 @@ import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.navigation.ui.NavigationUI
 import com.google.android.material.navigation.NavigationView
+import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
     private lateinit var mDrawerLayout : DrawerLayout
@@ -50,57 +53,21 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         // Handle navigation view item clicks here.
-        mDrawerLayout.let { mDrawerLayout->
-            item.isChecked = true
-            mDrawerLayout.closeDrawer(GravityCompat.START)
+        item.isChecked = true
+        drawer_layout.closeDrawer(GravityCompat.START)
 
-//            if (item.itemId == R.id.nav_logout) {
-//                val intent = Intent(this@MainActivity, LoginActivity::class.java)
-//                startActivity(intent)
-//                finish()
-//            }
-//
-//            mNavController.navigate(when (item.itemId){
-//                R.id.nav_about -> R.id.fragmentAbout
-//                else -> R.id.fragmentAbout//R.id.underConstruction
-//            })
+        if(item.itemId == R.id.nav_source) {
+            val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/khomin/Numerals"))
+            startActivity(browserIntent)
         }
+
+        mNavController.navigate(when (item.itemId){
+            R.id.nav_exercise -> R.id.mainScreenFragment
+            R.id.nav_about -> R.id.aboutFragment
+            else -> R.id.mainScreenFragment
+        })
+
         return true
     }
 
-//    override fun onEventDeviceClickAdapterItem(device: DeviceProperty) {
-//        fuelConfigure = FuelConfigureSimulation(device)
-//        /* if connection lost */
-//        (fuelConfigure as FuelConfigure).setConnectionListenerFromActivity {
-//            Handler(Looper.getMainLooper()).post(kotlinx.coroutines.Runnable {
-//                mNavController.popBackStack(R.id.deviceItems, false)
-//            })
-//            DialogMessages().showDialogConnectionLost(mAlertDialog)
-//        }
-//        /* goto connection fragment */
-//        mNavController.navigate(R.id.action_deviceItems_to_connectToLlsFragment)
-//    }
-//
-//    override fun onEventMenuClickAdapterItem(menuRole: DeviceMenuRole) {
-//        when(menuRole) {
-//            DeviceMenuRole.INFORMATION-> {
-//                mNavController.navigate(R.id.action_deviceMenuFragment_to_menuInformation)
-//            }
-//            DeviceMenuRole.SETTINGS -> {
-//                mNavController.navigate(R.id.action_deviceMenuFragment_to_menuSettings)
-//            }
-//            DeviceMenuRole.TYPE_DATA_OUTPUT -> {
-//                mNavController.navigate(R.id.action_deviceMenuFragment_to_menuTypeDataOutput)
-//            }
-//            DeviceMenuRole.FILTRATION -> {
-//                mNavController.navigate(R.id.action_deviceMenuFragment_to_menuFiltration)
-//            }
-//            DeviceMenuRole.TERMO_COMPENSTATION -> {
-//                mNavController.navigate(R.id.action_deviceMenuFragment_to_menuTermoCompensation)
-//            }
-//            DeviceMenuRole.CALIBRATION_TAR -> {
-//                mNavController.navigate(R.id.action_deviceMenuFragment_to_menuCalibration)
-//            }
-//        }
-//    }
 }

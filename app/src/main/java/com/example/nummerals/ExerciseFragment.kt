@@ -15,10 +15,13 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.Navigation
+import com.example.nozzletagconnect.db.entity.ExeResultEntity
+import com.example.nummerals.database.StatsRepository
 import com.example.nummerals.databinding.FragmentExerciseBinding
 import com.example.nummerals.viewModels.ExerciseViewModel
 import kotlinx.coroutines.*
 import kotlinx.coroutines.sync.Mutex
+import java.util.*
 import kotlin.random.Random
 
 class ExerciseFragment : Fragment() {
@@ -108,7 +111,7 @@ class ExerciseFragment : Fragment() {
     private fun errorResult() {
         mBinding.model?.exerciseInProcess?.postValue(false)
         mBinding.model?.exerciseStatus?.postValue(ExerciseViewModel.StatusExercise.ERROR)
-        mAudioPlayer.stopTickSound()
+        mAudioPlayer.stopBeforeDestroy()
         mFinalDialog?.show(
             mBinding.model?.correctAnswer?.value,
             mBinding.model?.inputValue?.value,
@@ -118,6 +121,12 @@ class ExerciseFragment : Fragment() {
             mBinding.model?.inputValue?.postValue("")
             mBinding.model?.progressExercise?.postValue(0)
             view?.let {
+                var correct = 0
+                mBinding.model?.progressExercise?.value?.let {
+                    correct = it.toInt()
+                }
+                StatsRepository.init(activity?.applicationContext)
+                StatsRepository.insert(ExeResultEntity(1, correct, Date().time))
                 Navigation.findNavController(it).popBackStack(R.id.mainScreenFragment, false)
             }
         }
@@ -336,7 +345,7 @@ class ExerciseFragment : Fragment() {
         super.onDestroy()
         mTimerJob?.cancel()
         mTimerJob = null
-        mAudioPlayer.stopTickSound()
+        mAudioPlayer.stopBeforeDestroy()
     }
 
     override fun onResume() {
@@ -345,7 +354,7 @@ class ExerciseFragment : Fragment() {
             mTimerJob = createTimerResidue()
             createExercise()
             updateStatsAndResetTimer()
-            mAudioPlayer.createTickSound(context)
+            mAudioPlayer.createSound(context)
         } else {
             mTimerJob?.start()
         }

@@ -45,6 +45,8 @@ class AudioNumeralPlayer : Activity() {
                 while (mMediaPlayerArray.isNotEmpty()) {
                     mMediaPlayerArray.first().start()
                     delay(mMediaPlayerArray.first().duration.toLong() - 200)
+                    mMediaPlayerArray.first().stop()
+                    mMediaPlayerArray.first().release()
                     mMediaPlayerArray.remove(mMediaPlayerArray.first())
                 }
             }
@@ -52,7 +54,7 @@ class AudioNumeralPlayer : Activity() {
         }
     }
 
-    fun createTickSound(context: Context?) {
+    fun createSound(context: Context?) {
         context?.let {
             if (mMediaPlayerTick == null) {
                 mMediaPlayerTick = MediaPlayer.create(
@@ -67,7 +69,11 @@ class AudioNumeralPlayer : Activity() {
         }
     }
 
-    fun stopTickSound() {
-        mMediaPlayerTick?.stop()
+    fun stopBeforeDestroy() {
+        if(mMediaPlayerTick?.isPlaying == true) {
+            mMediaPlayerTick?.stop()
+        }
+        mMediaPlayerTick?.release()
+        mMediaPlayerTick = null
     }
 }

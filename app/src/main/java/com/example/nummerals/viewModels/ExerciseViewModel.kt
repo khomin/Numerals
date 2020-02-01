@@ -24,4 +24,12 @@ class ExerciseViewModel() : ViewModel() {
         ERROR(2)
     }
     val exerciseStatus = MutableLiveData<StatusExercise>().apply { value = StatusExercise.PREPARE }
+
+    class Stats {
+        val totalAnswer = MutableLiveData<Int>().apply { value = 0 }
+        val correct = MutableLiveData<Int>().apply { value = 0 }
+        val incorrect = MutableLiveData<Int>().apply { value = 0 }
+    }
+
+    val stats = Stats()
 }
