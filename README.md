@@ -1,4 +1,4 @@
-# Nummerals
+# Numerals
 Numeral Training for English
 With audio
 While the range is from 1 to 10,000
